@@ -29,6 +29,14 @@ Install packages JS
   npm install
 ```
 
+Migration laravel
+
+```bash
+  php artisan migrate
+
+  php artisan db:seed
+```
+
 run project
 
 ```bash
