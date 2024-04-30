@@ -14,7 +14,7 @@ XD Fiesta adalah event Dies natalies **Primakara University**. Puncak acara XD F
 Clone project to local
 
 ```bash
-  git clone https://
+  git clone https://github.com/XD-Fiesta/ticketing-system.git
 ```
 
 Instal Laravel
