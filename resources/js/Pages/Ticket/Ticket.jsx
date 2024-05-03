@@ -1,15 +1,59 @@
-import TextInput from "@/Components/TextInput";
 import DashboardLayout from "@/Layouts/DashboardLayout";
 import { Head } from "@inertiajs/react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { useState, useEffect } from "react";
+import { CustomerService } from "./CustomerService";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { FilterMatchMode } from "primereact/api";
 
 export default function Ticket() {
+    const [customers, setCustomers] = useState([]);
+    const [globalFilterValue, setGlobalFilterValue] = useState("");
+    const [filters, setFilters] = useState({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    });
+
+    useEffect(() => {
+        CustomerService.getCustomersMedium().then((data) => setCustomers(data));
+    }, []);
+
+    const onGlobalFilterChange = (e) => {
+        const value = e.target.value;
+        let _filters = { ...filters };
+
+        _filters["global"].value = value;
+
+        setFilters(_filters);
+        setGlobalFilterValue(value);
+    };
+
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-content-start">
+                <IconField iconPosition="left">
+                    <InputIcon className="pi pi-search" />
+                    <InputText
+                        value={globalFilterValue}
+                        onChange={onGlobalFilterChange}
+                        placeholder="Keyword Search"
+                        className="pl-5"
+                        style={{ borderRadius: 10, fontWeight: 400 }}
+                    />
+                </IconField>
+            </div>
+        );
+    };
+
     return (
         <DashboardLayout>
             <Head title="Ticket" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="min-w-full inline-block align-middle">
+                        {/* <div className="min-w-full inline-block align-middle">
                             <div className="border rounded-lg divide-y divide-gray-200">
                                 <div className="py-3 px-4">
                                     <div className="relative max-w-xs flex">
@@ -260,7 +304,38 @@ export default function Ticket() {
                                     </nav>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
+
+                        <DataTable
+                            value={customers}
+                            paginator
+                            rows={5}
+                            tableStyle={{ minWidth: "50rem" }}
+                            emptyMessage="No customers found."
+                            header={renderHeader()}
+                            filters={filters}
+                        >
+                            <Column
+                                field="name"
+                                header="Name"
+                                style={{ width: "25%" }}
+                            ></Column>
+                            <Column
+                                field="country.name"
+                                header="Country"
+                                style={{ width: "25%" }}
+                            ></Column>
+                            <Column
+                                field="company"
+                                header="Company"
+                                style={{ width: "25%" }}
+                            ></Column>
+                            <Column
+                                field="representative.name"
+                                header="Representative"
+                                style={{ width: "25%" }}
+                            ></Column>
+                        </DataTable>
                     </div>
                 </div>
             </div>
