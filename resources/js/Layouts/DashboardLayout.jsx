@@ -4,12 +4,28 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
+import FlashMessage from "@/Components/FlashMessage";
 
 export default function DashboardLayout({ header, children }) {
     const { auth } = usePage().props;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
+    const menu = [
+        {
+            title: "Dashboard",
+            path: "dashboard.dashboard",
+        },
+        {
+            title: "Ticket",
+            path: "dashboard.ticket",
+        },
+        {
+            title: "Event",
+            path: "dashboard.event",
+        },
+    ];
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -28,21 +44,17 @@ export default function DashboardLayout({ header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route("dashboard.dashboard")}
-                                    active={route().current(
-                                        "dashboard.dashboard"
-                                    )}
-                                >
-                                    Dashboard
-                                </NavLink>
-
-                                <NavLink
-                                    href={route("dashboard.ticket")}
-                                    active={route().current("dashboard.ticket")}
-                                >
-                                    Tiket
-                                </NavLink>
+                                {menu.map((data, index) => {
+                                    return (
+                                        <NavLink
+                                            key={index}
+                                            href={route(data.path)}
+                                            active={route().current(data.path)}
+                                        >
+                                            {data.title}
+                                        </NavLink>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -144,12 +156,19 @@ export default function DashboardLayout({ header, children }) {
                     }
                 >
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink
-                            href={route("dashboard.dashboard")}
-                            active={route().current("dashboard.dashboard")}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {menu.map((data, index) => {
+                            return (
+                                <ResponsiveNavLink
+                                    key={index}
+                                    href={route("dashboard.dashboard")}
+                                    active={route().current(
+                                        "dashboard.dashboard"
+                                    )}
+                                >
+                                    Dashboard
+                                </ResponsiveNavLink>
+                            );
+                        })}
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
@@ -180,7 +199,10 @@ export default function DashboardLayout({ header, children }) {
                 </div>
             </nav>
 
-            <main className="px-4">{children}</main>
+            <main className="px-4">
+                <FlashMessage />
+                {children}
+            </main>
         </div>
     );
 }
