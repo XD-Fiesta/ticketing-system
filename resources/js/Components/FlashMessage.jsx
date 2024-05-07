@@ -7,7 +7,7 @@ export default () => {
     const { flash } = usePage().props;
     useEffect(() => {
         if (flash.success) {
-            toast.success("Event Successfuly Created", {
+            toast.success(flash.success, {
                 position: "top-right",
                 autoClose: 1000,
                 hideProgressBar: false,
@@ -18,7 +18,7 @@ export default () => {
                 theme: "light",
             });
         } else if (flash.error) {
-            toast.error("Event Failed Created", {
+            toast.error(flash.error, {
                 position: "top-right",
                 autoClose: 1000,
                 hideProgressBar: false,
