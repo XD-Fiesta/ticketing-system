@@ -1,4 +1,5 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
+import FlashMessage from "@/Components/FlashMessage";
 import { Link } from "@inertiajs/react";
 
 export default function Guest({ children, cardClassName, backdropClassName }) {
@@ -6,6 +7,7 @@ export default function Guest({ children, cardClassName, backdropClassName }) {
         <div
             className={`min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 ${backdropClassName}`}
         >
+            <FlashMessage />
             <div>
                 <Link href="/">
                     <ApplicationLogo className="w-28" />

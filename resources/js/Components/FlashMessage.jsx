@@ -5,11 +5,13 @@ import { useEffect } from "react";
 
 export default () => {
     const { flash } = usePage().props;
+
+    console.log(flash);
     useEffect(() => {
         if (flash.success) {
-            toast.success("Event Successfuly Created", {
+            toast.success(flash.success, {
                 position: "top-right",
-                autoClose: 1000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -18,9 +20,9 @@ export default () => {
                 theme: "light",
             });
         } else if (flash.error) {
-            toast.error("Event Failed Created", {
+            toast.error(flash.error, {
                 position: "top-right",
-                autoClose: 1000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,

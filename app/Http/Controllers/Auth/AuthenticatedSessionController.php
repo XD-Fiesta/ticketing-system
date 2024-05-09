@@ -34,6 +34,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /**
+         * Check if authenticated user is inactive
+         */
+        if (Auth::getUser()->referal !== null && Auth::getUser()->referal->active === 0) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Akun member belum aktif');
+        }
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
