@@ -11,3 +11,7 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+.p-dropdown.p-component .p-inputtext {
+    padding: 7px 0.75rem !important;
+}
