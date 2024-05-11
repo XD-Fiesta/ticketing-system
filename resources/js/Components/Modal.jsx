@@ -6,6 +6,7 @@ export default function Modal({
     titleHeader,
     show = false,
     maxWidth = "2xl",
+    heightMax = "100%",
     closeable = true,
     onClose = () => {},
 }) {
@@ -28,7 +29,7 @@ export default function Modal({
             <Dialog
                 as="div"
                 id="modal"
-                className="fixed inset-0 flex overflow-y-auto px-4 py-6 sm:px-0 items-center z-50 transform transition-all"
+                className="absolute inset-0 flex overflow-y-auto px-4 py-6 sm:px-0 items-center z-50 transform transition-all"
                 onClose={close}
             >
                 <Transition.Child
@@ -40,7 +41,10 @@ export default function Modal({
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="absolute inset-0 bg-gray-500/75" />
+                    <div
+                        className="fixed inset-0 bg-gray-500/75"
+                        style={{ height: heightMax }}
+                    />
                 </Transition.Child>
 
                 <Transition.Child
@@ -53,7 +57,7 @@ export default function Modal({
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
                     <Dialog.Panel
-                        className={`mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto ${maxWidthClass}`}
+                        className={`mb-6 bg-white rounded-lg overflow-hidden h-100 shadow-xl transform transition-all sm:w-full sm:mx-auto sm:my-auto ${maxWidthClass}`}
                     >
                         <div className="px-4 pt-4  flex justify-content-between">
                             <h6>{titleHeader}</h6>
