@@ -62,6 +62,7 @@ export default function Event({ errors, events }) {
             },
         });
     };
+    // End Delete Data
 
     // Update Data
     const submitUpdate = (e) => {
