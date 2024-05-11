@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("name_event");
             $table->string("location_event");
             $table->string("description");
-            $table->dateTime("date_event");
+            $table->dateTime("date_start");
             $table->timestamps();
             $table->softDeletes();
         });

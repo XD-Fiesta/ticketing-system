@@ -11,18 +11,22 @@ import DangerButton from "@/Components/DangerButton";
 
 export default function Event({ errors, events }) {
     const [visible, setVisible] = useState(false);
-    const [dataevents, setDataEvents] = useState(events);
+    const [data, setData] = useState(events);
     const [actionUpdate, setActionUpdate] = useState();
     const [editVisible, setEditVisible] = useState(false);
 
     useEffect(() => {
-        setDataEvents(events);
+        setData(events);
     }, [events]);
 
     const [values, setValues] = useState({
-        nama_event: "",
+        name_event: "",
         location_event: "",
-        date_event: "",
+        date_end: "",
+        date_start: "",
+        type_event: "",
+        price: "",
+        displayPrice: "",
         description: "",
     });
 
@@ -35,11 +39,23 @@ export default function Event({ errors, events }) {
         }));
     }
 
+    const numberFormat = (event) => {
+        let input = event.target.value;
+        let number = input.replace(/[^0-9]/g, "");
+        let numericValue = parseFloat(number.replace(/\./g, ""));
+        let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        setValues((values) => ({
+            ...values,
+            displayPrice: formatted,
+            price: numericValue,
+        }));
+    };
+
     // Delete Data
     const handleDelete = (rowData) => {
         router.delete(route("dashboard.event.delete", rowData.id), {
             onSuccess: (eventData) => {
-                setDataEvents((prevEvents) => [
+                setData((prevEvents) => [
                     ...prevEvents,
                     eventData.props.events,
                 ]);
@@ -54,14 +70,18 @@ export default function Event({ errors, events }) {
 
         router.put(route("dashboard.event.update", values.id_event), values, {
             onSuccess: (eventData) => {
-                setDataEvents((prevEvents) => [
+                setData((prevEvents) => [
                     ...prevEvents,
                     eventData.props.events,
                 ]);
                 setValues({
-                    nama_event: "",
+                    name_event: "",
                     location_event: "",
-                    date_event: "",
+                    date_end: "",
+                    date_start: "",
+                    type_event: "",
+                    price: "",
+                    displayPrice: "",
                     description: "",
                 });
                 setEditVisible(false);
@@ -70,11 +90,17 @@ export default function Event({ errors, events }) {
     };
 
     const handleEdit = (rowData) => {
+        let number = rowData.price;
+        let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         setValues({
             id_event: rowData.id,
-            nama_event: rowData.name_event,
+            name_event: rowData.name_event,
             location_event: rowData.location_event,
-            date_event: rowData.date_event,
+            date_end: rowData.date_end,
+            type_event: rowData.type,
+            date_start: rowData.date_start,
+            price: rowData.price,
+            displayPrice: formatted,
             description: rowData.description,
         });
         setEditVisible(true);
@@ -86,15 +112,11 @@ export default function Event({ errors, events }) {
                 show={editVisible}
                 onClose={() => setEditVisible(false)}
                 titleHeader="Edit Event"
+                heightMax="920px"
             >
                 <form onSubmit={submitUpdate}>
                     <div className="px-4">
                         <div className="mb-3">
-                            <input
-                                type="hidden"
-                                name="id_event"
-                                id="id_event"
-                            />
                             <div className="col-span-full">
                                 <label
                                     htmlFor="nama_event"
@@ -106,19 +128,81 @@ export default function Event({ errors, events }) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                         <input
                                             type="text"
-                                            name="nama_event"
-                                            id="nama_event"
-                                            autoComplete="nama_event"
+                                            name="name_event"
+                                            id="name_event"
+                                            autoComplete="name_event"
                                             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
                                             placeholder="Name Event"
-                                            value={values.nama_event}
+                                            value={values.name_event}
                                             onChange={handleChange}
                                         />
                                     </div>
 
-                                    {errors.nama_event && (
+                                    {errors.name_event && (
                                         <div className="mt-1 text-red-500">
-                                            {errors.nama_event}
+                                            {errors.name_event}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <div className="col-span-full">
+                                <label
+                                    htmlFor="type"
+                                    className="block text-sm font-medium leading-6 text-gray-900"
+                                >
+                                    Type Event
+                                </label>
+                                <div className="mt-2">
+                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                        <input
+                                            type="text"
+                                            name="type_event"
+                                            id="type_event"
+                                            autoComplete="type_event"
+                                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                            placeholder="Example :  Earlybird"
+                                            value={values.type_event}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    {errors.type_event && (
+                                        <div className="mt-1 text-red-500">
+                                            {errors.type_event}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <div className="col-span-full">
+                                <label
+                                    htmlFor="nama_event"
+                                    className="block text-sm font-medium leading-6 text-gray-900"
+                                >
+                                    Price Event
+                                </label>
+                                <div className="mt-2">
+                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                        <input
+                                            type="text"
+                                            name="price"
+                                            id="price"
+                                            autoComplete="price"
+                                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                            placeholder="Rp 1.000.000"
+                                            value={values.displayPrice}
+                                            onChange={numberFormat}
+                                        />
+                                    </div>
+
+                                    {errors.price && (
+                                        <div className="mt-1 text-red-500">
+                                            {errors.price}
                                         </div>
                                     )}
                                 </div>
@@ -158,27 +242,57 @@ export default function Event({ errors, events }) {
                         <div className="mb-3">
                             <div className="col-span-full">
                                 <label
-                                    htmlFor="date_event"
+                                    htmlFor="date_start"
                                     className="block text-sm font-medium leading-6 text-gray-900"
                                 >
-                                    Date Event
+                                    Date Start Event
                                 </label>
                                 <div className="mt-2">
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                         <input
                                             type="datetime-local"
-                                            name="date_event"
-                                            id="date_event"
-                                            autoComplete="date_event"
+                                            name="date_start"
+                                            id="date_start"
+                                            autoComplete="date_start"
                                             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
                                             placeholder="Date Event"
-                                            value={values.date_event}
+                                            value={values.date_start}
                                             onChange={handleChange}
                                         />
                                     </div>
-                                    {errors.date_event && (
+                                    {errors.date_start && (
                                         <div className="mt-1 text-red-500">
-                                            {errors.date_event}
+                                            {errors.date_start}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <div className="col-span-full">
+                                <label
+                                    htmlFor="date_end"
+                                    className="block text-sm font-medium leading-6 text-gray-900"
+                                >
+                                    Date End Event
+                                </label>
+                                <div className="mt-2">
+                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                        <input
+                                            type="datetime-local"
+                                            name="date_end"
+                                            id="date_end"
+                                            autoComplete="date_end"
+                                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                            placeholder="Date Event"
+                                            value={values.date_end}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    {errors.date_end && (
+                                        <div className="mt-1 text-red-500">
+                                            {errors.date_end}
                                         </div>
                                     )}
                                 </div>
@@ -234,6 +348,7 @@ export default function Event({ errors, events }) {
                     show={visible}
                     onClose={() => setVisible(false)}
                     titleHeader="Add Event"
+                    heightMax="920px"
                 >
                     <form onSubmit={submit}>
                         <div className="px-4">
@@ -249,19 +364,81 @@ export default function Event({ errors, events }) {
                                         <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                             <input
                                                 type="text"
-                                                name="nama_event"
-                                                id="nama_event"
-                                                autoComplete="nama_event"
+                                                name="name_event"
+                                                id="name_event"
+                                                autoComplete="name_event"
                                                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
                                                 placeholder="Name Event"
-                                                value={values.nama_event}
+                                                value={values.name_event}
                                                 onChange={handleChange}
                                             />
                                         </div>
 
-                                        {errors.nama_event && (
+                                        {errors.name_event && (
                                             <div className="mt-1 text-red-500">
-                                                {errors.nama_event}
+                                                {errors.name_event}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mb-3">
+                                <div className="col-span-full">
+                                    <label
+                                        htmlFor="type"
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Type Event
+                                    </label>
+                                    <div className="mt-2">
+                                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                            <input
+                                                type="text"
+                                                name="type_event"
+                                                id="type_event"
+                                                autoComplete="type_event"
+                                                className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                                placeholder="Example :  Earlybird"
+                                                value={values.type_event}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+
+                                        {errors.type_event && (
+                                            <div className="mt-1 text-red-500">
+                                                {errors.type_event}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mb-3">
+                                <div className="col-span-full">
+                                    <label
+                                        htmlFor="nama_event"
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Price Event
+                                    </label>
+                                    <div className="mt-2">
+                                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                            <input
+                                                type="text"
+                                                name="price"
+                                                id="price"
+                                                autoComplete="price"
+                                                className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                                placeholder="Rp 1.000.000"
+                                                value={values.displayPrice}
+                                                onChange={numberFormat}
+                                            />
+                                        </div>
+
+                                        {errors.price && (
+                                            <div className="mt-1 text-red-500">
+                                                {errors.price}
                                             </div>
                                         )}
                                     </div>
@@ -301,27 +478,57 @@ export default function Event({ errors, events }) {
                             <div className="mb-3">
                                 <div className="col-span-full">
                                     <label
-                                        htmlFor="date_event"
+                                        htmlFor="date_start"
                                         className="block text-sm font-medium leading-6 text-gray-900"
                                     >
-                                        Date Event
+                                        Date Start Event
                                     </label>
                                     <div className="mt-2">
                                         <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                             <input
                                                 type="datetime-local"
-                                                name="date_event"
-                                                id="date_event"
-                                                autoComplete="date_event"
+                                                name="date_start"
+                                                id="date_start"
+                                                autoComplete="date_start"
                                                 className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
                                                 placeholder="Date Event"
-                                                value={values.date_event}
+                                                value={values.date_start}
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        {errors.date_event && (
+                                        {errors.date_start && (
                                             <div className="mt-1 text-red-500">
-                                                {errors.date_event}
+                                                {errors.date_start}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mb-3">
+                                <div className="col-span-full">
+                                    <label
+                                        htmlFor="date_end"
+                                        className="block text-sm font-medium leading-6 text-gray-900"
+                                    >
+                                        Date End Event
+                                    </label>
+                                    <div className="mt-2">
+                                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                            <input
+                                                type="datetime-local"
+                                                name="date_end"
+                                                id="date_end"
+                                                autoComplete="date_end"
+                                                className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 pl-3"
+                                                placeholder="Date Event"
+                                                value={values.date_end}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        {errors.date_end && (
+                                            <div className="mt-1 text-red-500">
+                                                {errors.date_end}
                                             </div>
                                         )}
                                     </div>
@@ -370,14 +577,18 @@ export default function Event({ errors, events }) {
 
         router.post(route("dashboard.event.store"), values, {
             onSuccess: (eventData) => {
-                setDataEvents((prevEvents) => [
+                setData((prevEvents) => [
                     ...prevEvents,
                     eventData.props.events,
                 ]);
                 setValues({
-                    nama_event: "",
+                    name_event: "",
                     location_event: "",
-                    date_event: "",
+                    date_end: "",
+                    date_start: "",
+                    type_event: "",
+                    price: "",
+                    displayPrice: "",
                     description: "",
                 });
                 setVisible(false);
@@ -393,11 +604,7 @@ export default function Event({ errors, events }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <Table
-                            datas={dataevents}
-                            modalAdd={modalAdd()}
-                            rows={10}
-                        >
+                        <Table datas={data} modalAdd={modalAdd()} rows={10}>
                             <Column
                                 field="keyId"
                                 header="No"
@@ -419,7 +626,7 @@ export default function Event({ errors, events }) {
                                 style={{ width: "25%" }}
                             ></Column>
                             <Column
-                                field="date_event"
+                                field="date_end"
                                 header="Date Event"
                                 style={{ width: "25%" }}
                             ></Column>
