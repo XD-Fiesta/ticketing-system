@@ -29,16 +29,19 @@ class EventController extends Controller
             $formData = $request->validated();
 
             $event = Event::create([
-                "name_event" => $formData['nama_event'],
+                "name_event" => $formData['name_event'],
                 "location_event" => $formData['location_event'],
-                "date_event" => $formData['date_event'],
+                "type" => $formData['type_event'],
+                "price" => $formData['price'],
+                "date_start" => $formData['date_start'],
+                "date_end" => $formData['date_end'],
                 "description" => $formData['description'],
             ]);
 
             if ($event) {
-                return Redirect::route('dashboard.event')->with(['success' => 'Event Succefully Created', 'events' => $event]);
+                return Redirect::route('dashboard.event.index')->with('success', 'Event Succefully Created');
             } else {
-                return Redirect::route('dashboard.event')->with('error', 'Event Failed Created');
+                return Redirect::route('dashboard.event.index')->with('error', 'Event Failed Created');
             }
 
         } catch (Exception $e) {
@@ -52,16 +55,19 @@ class EventController extends Controller
         try {
             $formData = $request->validated();
             $event = Event::find($id);
-            $event->name_event = $formData['nama_event'];
+            $event->name_event = $formData['name_event'];
+            $event->type = $formData['type_event'];
+            $event->price = $formData['price'];
             $event->location_event = $formData['location_event'];
             $event->description = $formData['description'];
-            $event->date_event = $formData['date_event'];
+            $event->date_start = $formData['date_start'];
+            $event->date_end = $formData['date_end'];
             $status = $event->save();
 
             if ($status) {
-                return Redirect::route('dashboard.event')->with(['success' => 'Event Succefully Updated', 'events' => $event]);
+                return Redirect::route('dashboard.event.index')->with(['success' => 'Event Succefully Updated', 'events' => $event]);
             } else {
-                return Redirect::route('dashboard.event')->with('error', 'Event Failed Updated');
+                return Redirect::route('dashboard.event.index')->with('error', 'Event Failed Updated');
             }
 
         } catch (Exception $e) {
@@ -76,9 +82,9 @@ class EventController extends Controller
             $event = Event::find($id);
             $status = $event->delete();
             if ($status) {
-                return Redirect::route('dashboard.event')->with(['success' => 'Event Succefully Deleted', 'events' => $event]);
+                return Redirect::route('dashboard.event.index')->with(['success' => 'Event Succefully Deleted', 'events' => $event]);
             } else {
-                return Redirect::route('dashboard.event')->with('error', 'Event Failed Deleted');
+                return Redirect::route('dashboard.event.index')->with('error', 'Event Failed Deleted');
             }
 
         } catch (Exception $e) {
