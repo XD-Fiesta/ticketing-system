@@ -16,7 +16,7 @@ export default function JoinMember() {
         no_whatsapp: "",
     });
 
-    const [isSuccessRegister, setIsSuccessRegister] = useState(true);
+    const [isSuccessRegister, setIsSuccessRegister] = useState(false);
 
     useEffect(() => {
         return () => {

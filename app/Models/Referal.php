@@ -11,7 +11,7 @@ class Referal extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'referal';
+    protected $table = 'referals';
     protected $guarded = ['id'];
 
     protected $fillable = [
@@ -19,5 +19,6 @@ class Referal extends Model
         "phone",
         "code_referal",
         "status",
+        "user_id"
     ];
 }

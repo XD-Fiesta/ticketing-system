@@ -5,7 +5,13 @@ import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 
-export default function Table({ datas, modalAdd, rows, children }) {
+export default function Table({
+    datas,
+    modalAdd,
+    rows,
+    children,
+    emptyMessage = "No rows found.",
+}) {
     // nyimpen data
     const [data, setData] = useState([]);
     const [globalFilterValue, setGlobalFilterValue] = useState("");
@@ -50,7 +56,7 @@ export default function Table({ datas, modalAdd, rows, children }) {
             paginator
             rows={rows}
             tableStyle={{ minWidth: "50rem" }}
-            emptyMessage="No customers found."
+            emptyMessage={emptyMessage}
             header={renderHeader()}
             filters={filters}
         >

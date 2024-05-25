@@ -29,6 +29,7 @@ class JoinMemberController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -40,7 +41,8 @@ class JoinMemberController extends Controller
                 'active' => false,
                 'code_referal' => null,
                 'phone' => $request->no_whatsapp,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'status' => 'inactive'
             ]);
 
             DB::commit();
@@ -49,11 +51,5 @@ class JoinMemberController extends Controller
 
             dd($e);
         }
-
-        // event(new Registered($user));
-
-        // Auth::login($user);
-
-        // return redirect(route('dashboard', absolute: false));
     }
 }

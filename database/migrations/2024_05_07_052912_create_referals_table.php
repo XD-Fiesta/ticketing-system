@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('referals', function (Blueprint $table) {
+
             $table->id();
-            $table->string("nim");
-            $table->string("phone");
-            $table->string("code_referal");
+            $table->string("nim")->nullable();
+            $table->string('code_referal')->nullable();
+            $table->string('phone');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->enum("status", ['active', 'inactive', 'banned']);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

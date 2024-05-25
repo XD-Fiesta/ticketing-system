@@ -50,5 +50,7 @@ Route::name('profile.')->group(function () {
 
 Route::get('/join-member', [JoinMemberController::class, 'index'])->name('join-member');
 Route::post('/join-member', [JoinMemberController::class, 'store'])->name('join-member');
+Route::middleware('guest')->group(function () {
+});
 
 require __DIR__ . '/auth.php';

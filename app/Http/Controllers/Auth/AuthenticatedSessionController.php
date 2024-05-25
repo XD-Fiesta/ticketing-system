@@ -37,9 +37,14 @@ class AuthenticatedSessionController extends Controller
         /**
          * Check if authenticated user is inactive
          */
-        if (Auth::getUser()->referal !== null && Auth::getUser()->referal->active === 0) {
-            Auth::logout();
-            return redirect()->route('login')->with('error', 'Akun member belum aktif');
+        if (Auth::getUser()->referal !== null) {
+            if (Auth::getUser()->referal->status === 'inactive') {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Akun member belum aktif');
+            } else if (Auth::getUser()->referal->status === 'banned') {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Akun member bermasalah');
+            }
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);

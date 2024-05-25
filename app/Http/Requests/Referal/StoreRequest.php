@@ -17,7 +17,7 @@ class StoreRequest extends FormRequest
         return [
             "nim" => "required|string|max:255",
             "phone" => "required|string|max:15",
-            "code_referal" => "required",
+            "code_referal" => "required|unique:referals",
             "status" => "required|string",
         ];
     }

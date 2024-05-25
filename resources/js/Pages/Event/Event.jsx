@@ -397,6 +397,7 @@ export default function Event({ errors, events }) {
                             datas={dataevents}
                             modalAdd={modalAdd()}
                             rows={10}
+                            emptyMessage="No events found."
                         >
                             <Column
                                 field="keyId"

@@ -17,9 +17,14 @@ class ReferalController extends Controller
         $referals = Referal::orderBy('created_at', 'desc')->get();
         $referals->map(function ($referal, $key) {
             $referal->keyId = $key + 1;
+            $referal->status = ucwords($referal->status);
+            $referal->nim = $referal->nim ?? '-';
+            $referal->code_referal = $referal->code_referal ?? '-';
             return $referal;
         });
-        return Inertia::render('Referal/Referal', compact('referals'));
+
+
+        return Inertia::render('Referal/ReferalV2', compact('referals'));
     }
 
     public function store(StoreRequest $request)
@@ -35,11 +40,12 @@ class ReferalController extends Controller
             ]);
 
             if ($status) {
-                return Redirect::route('dashboard.referal.index')->with('success', 'Event Succefully Created');
+                return Redirect::route('dashboard.referal.index')->with('success', 'Referal Succefully Created');
             } else {
-                return Redirect::route('dashboard.referal.index')->with('error', 'Event Failed Created');
+                return Redirect::route('dashboard.referal.index')->with('error', 'Referal Failed Created');
             }
         } catch (Exception $e) {
+            dd($e);
             Log::error('Error Store Referal with error : ' . $e);
         }
     }

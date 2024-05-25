@@ -13,5 +13,11 @@
 }
 
 .p-dropdown.p-component .p-inputtext {
-    padding: 7px 0.75rem !important;
+    padding: 7px 1rem !important;
+    font-size: 0.85rem;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem
 }
